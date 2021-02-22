@@ -6,7 +6,7 @@ import robocode.*;
  public class Motorista extends Robot {
      public void run() {
     	 
-    	 setColors(Color.pink,Color.pink,Color.gray); // body / gun / radar
+    	 setColors(Color.pink,Color.pink,Color.white); // body / gun / radar
     	 
     	 // Robot Main Loop
          while (true) {
