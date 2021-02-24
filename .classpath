@@ -6,9 +6,9 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Duarte Alves/Desktop/ASW/robocode/libs/robocode.jar">
+	<classpathentry kind="lib" path="/home/cerqueira/.robocode/libs/robocode.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/Users/Duarte%20Alves/Desktop/ASW/robocode/javadoc/"/>
+			<attribute name="javadoc_location" value="file:/home/cerqueira/.robocode/javadoc/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
