@@ -6,7 +6,7 @@ import robocode.*;
 	 
      public void run() {
 
-         setColors(Color.pink,Color.pink,Color.white); // body / gun / radar
+         setColors(Color.green,Color.green,Color.white); // body / gun / radar
 
          // Robot Main Loop
          while (true) {
