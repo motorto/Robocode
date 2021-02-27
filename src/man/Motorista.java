@@ -3,7 +3,7 @@ package man;
 import java.awt.Color;
 import robocode.*;
 
-public class Motorista extends Robot {
+public class Motorista extends AdvancedRobot {
 	
 	boolean lockedEnemy = false;
 
@@ -57,10 +57,10 @@ public class Motorista extends Robot {
 		turnLeft(180);
 	}
 
-	/*
-	 * // Quando acerta o tiro 
-	 * public void onHitRobot(HitRobotEvent event){ }
-	 */
+	
+//	  // Quando acerta o tiro 
+//	  public void onHitRobot(HitRobotEvent event){ }
+//	 
 
 	public void onHitByBulletEvent(HitByBulletEvent event) {
 			turnRight(90);
