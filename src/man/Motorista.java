@@ -4,8 +4,6 @@ import java.awt.Color;
 import robocode.*;
 
 public class Motorista extends AdvancedRobot {
-	
-	boolean lockedEnemy = false;
 
 	public void run() {
 
@@ -19,11 +17,9 @@ public class Motorista extends AdvancedRobot {
 	}
 
 	public void move() {
-		ahead(200);
-		turnRight(45);
-		if (!lockedEnemy) {
-			turnGunRight(360);
-		}
+		turnGunRight(720);
+//		ahead(200);
+	//	turnRight(45);
 	}
 
 	// Quando encontra o adversario
@@ -32,39 +28,38 @@ public class Motorista extends AdvancedRobot {
 		double maxPower = Rules.MAX_BULLET_POWER;
 		double distance = event.getDistance();
 		double bearing = event.getBearing();
-
-		// Rodar para o adversario
-		if (bearing < 180) 
-			turnRight(bearing);
-		else 
-			turnLeft(bearing);
-
-		if (distance < 100) {
-			lockedEnemy=true;
+		
+		setTurnGunRight(getHeading() - getRadarHeading() + bearing);
+		//dar lock no rival
+		if (distance < 100 ) {
 			fire(maxPower);
-		} else if(distance < 300){
-			fire(5);
+		} 
+		else if(distance < 300){
+			fire(2);
 			ahead(distance/3);
 		}
 		else { 
-			lockedEnemy=false;
-			fire(1);
+			ahead(distance/3);
+			//fire(1);
 		}
-		
 	}
 
 	public void onHittWall(HitWallEvent event) {
 		turnLeft(180);
+		fire(1);
 	}
 
 	
 //	  // Quando acerta o tiro 
 //	  public void onHitRobot(HitRobotEvent event){ }
-//	 
 
 	public void onHitByBulletEvent(HitByBulletEvent event) {
 			turnRight(90);
 			ahead(150);
+	}
+	
+	public void onRobotDeath(RobotDeathEvent event) { 
+		setTurnRadarRight(720); 
 	}
 
 }
