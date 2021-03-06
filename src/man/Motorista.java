@@ -5,10 +5,11 @@ import robocode.*;
 
 public class Motorista extends AdvancedRobot {
 	boolean locked = false;
+	byte dir = 1;
 	public void run() {
-
 		setColors(Color.black, Color.black, Color.white); // body / gun / radar
-
+		setBulletColor(Color.green);
+		
 		// Robot Main Loop
 		while (true) {
 			move();
@@ -18,41 +19,35 @@ public class Motorista extends AdvancedRobot {
 
 	public void move() {
 		if(locked == false) turnGunRight(720);
-		ahead(100);
-		turnLeft(90);
+		ahead(50);
 	}
 
 	// Enemy found
 	public void onScannedRobot(ScannedRobotEvent event) {
 		boolean lowEnergy = false;
 		double maxPower = Rules.MAX_BULLET_POWER;
-		double distance = event.getDistance();
-		double bearing = event.getBearing();
 		
-		setTurnGunRight(getHeading() - getRadarHeading() + bearing);
-		locked = true;
+		setTurnGunRight(getHeading() - getRadarHeading() + event.getBearing());
+		turnRight(event.getBearing() + 90);
+		
 		if (getEnergy() < 30) {
 			lowEnergy = true;
 		} else lowEnergy = false;
-
-		if (distance < 100 && lowEnergy == false) {
+		
+		if (event.getDistance() < 100 && lowEnergy == false) {
 			fire(maxPower);
 		} 
-		else if(distance < 300 && lowEnergy == false){
+		else if(event.getDistance() < 300 && lowEnergy == false){
 			fire(2);
 		}
 		else { 
-			locked = false;
 			fire(1);
 		}
 	}
 
 	public void onHittWall(HitWallEvent event) {
-		double tmp = getHeading() + 135; 
-		if (tmp >= 360) tmp-=360;
-		turnRight(tmp);
+		turnRight(event.getBearing() * -1); // Vira para a direção contraria
 		ahead(50);
-		fire(1); 
 	}
 
 	
@@ -60,11 +55,13 @@ public class Motorista extends AdvancedRobot {
 //	  public void onHitRobot(HitRobotEvent event){ }
 
 	public void onHitByBulletEvent(HitByBulletEvent event) {
-		back(100);
+		dir*=-1;
+		if (dir == 1) ahead(50);
+		else back(50);
 	}
 	
 	public void onRobotDeath(RobotDeathEvent event) { 
-		setTurnRadarRight(720); 
+		locked=false;
 	}
-
+	
 }
