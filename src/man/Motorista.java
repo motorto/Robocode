@@ -10,16 +10,12 @@ public class Motorista extends AdvancedRobot {
 		setColors(Color.black, Color.black, Color.white); // body / gun / radar
 		setBulletColor(Color.green);
 		
+		setAdjustGunForRobotTurn(true);
+		
 		// Robot Main Loop
 		while (true) {
-			move();
+			turnGunLeft(180);
 		}
-
-	}
-
-	public void move() {
-		if(locked == false) turnGunRight(720);
-		ahead(50);
 	}
 
 	// Enemy found
@@ -27,17 +23,18 @@ public class Motorista extends AdvancedRobot {
 		boolean lowEnergy = false;
 		double maxPower = Rules.MAX_BULLET_POWER;
 		
-		setTurnGunRight(getHeading() - getRadarHeading() + event.getBearing());
+		setTurnGunRight(getHeading() + event.getBearing() - getRadarHeading());
 		turnRight(event.getBearing() + 90);
 		
-		if (getEnergy() < 30) {
+		
+		if (getEnergy() < 30.0) {
 			lowEnergy = true;
 		} else lowEnergy = false;
 		
-		if (event.getDistance() < 100 && lowEnergy == false) {
+		if (event.getDistance() < 100.0 && lowEnergy == false) {
 			fire(maxPower);
 		} 
-		else if(event.getDistance() < 300 && lowEnergy == false){
+		else if(event.getDistance() < 300.0 && lowEnergy == false){
 			fire(2);
 		}
 		else { 
@@ -50,7 +47,6 @@ public class Motorista extends AdvancedRobot {
 		ahead(50);
 	}
 
-	
 //	  // Quando acerta o tiro 
 //	  public void onHitRobot(HitRobotEvent event){ }
 
