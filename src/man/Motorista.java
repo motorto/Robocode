@@ -8,27 +8,28 @@ public class Motorista extends AdvancedRobot {
 	private int enemyEnergy = 100; //inicial enemy energy
 
 	public void run() {
-		setColors(Color.pink,Color.pink,Color.white); // body / gun / radar
-		setBulletColor(Color.pink); 
-		setAdjustGunForRobotTurn(true);//gun independent from body
-		setAdjustRadarForGunTurn(true);//radar independent from gun
+		// color of body / gun / radar / bullet /  arc Scan
+		setColors(Color.pink,Color.pink,Color.white,Color.pink,Color.pink);
+
+		setAdjustGunForRobotTurn(true); //gun independent from body
+		setAdjustRadarForGunTurn(true); //radar independent from gun
 
 		turnRadarRightRadians(Double.POSITIVE_INFINITY); //turns until scanned robot
-		
+
 		while (true) {
-			scan();//as there are only one enemy force scaned robot event 
+			scan();//as there are only one enemy force scanned robot event 
 		}
 	}
 
 	public void onScannedRobot(ScannedRobotEvent event) {
 		int lastEnemyEnergy = enemyEnergy;
 		boolean lowEnergy = false;
-		
+
 		//get turn required for scan -> (enemy angle - current radar heading)
 		double radarTurn = getHeading() + event.getBearing()-getRadarHeading();
-				
+
 		setTurnRadarRight(normalizeBearing(radarTurn));
-		
+
 		//stay (parallel) with enemy
 		setTurnRight(normalizeBearing(event.getBearing() + 90 - (15 * moveDirection)));
 		//get turn required for gun -> (enemy angle - current gun heading)
@@ -42,19 +43,19 @@ public class Motorista extends AdvancedRobot {
 		else
 			lowEnergy = false;
 
-		if (!lowEnergy) { // If low energy , we dont shot we just move
-			if (event.getDistance() < 20)//bots touching
+		if (!lowEnergy) { // If low energy , we don't shot we just move
+			if (event.getDistance() < 20)//bot's touching
 				fire(Rules.MAX_BULLET_POWER);
-			else if(event.getDistance() < 100 ) {//bots close
+			else if(event.getDistance() < 100 ) { //bot's close
 				fire(3);
 			}
-			else //bots far away
+			else //bot's far away
 				fire(1);
-			
+
 			shots++;
 		}
 
-		
+
 		enemyEnergy  = (int) event.getEnergy();
 		// if enemyShoots we change direction with 33.(3)% chance
 		if ((lastEnemyEnergy > enemyEnergy) && random(shots)) {
@@ -62,12 +63,12 @@ public class Motorista extends AdvancedRobot {
 		}
 		AvoidWall();
 	}
-	
+
 	public boolean random(int x) {
 		if (x % 3 == 0) return true;
 		else return false;
 	}
-	
+
 	//change direction on hit wall
 	public void onHitWall(HitWallEvent event) {
 		moveDirection*=-1;
@@ -83,14 +84,15 @@ public class Motorista extends AdvancedRobot {
 		}
 		return angle;
 	}
-	
-	//find next enenmy
+
+	//find next enemy
 	public void onRobotDeath(RobotDeathEvent event) {
 		turnRadarRightRadians(Double.POSITIVE_INFINITY);
 	}
-	
+
 	//dance
 	public void onWin(WinEvent event) {
+		setMaxVelocity(0);
 		while(true) {
 			turnRadarLeft(30);
 			turnRadarRight(60);
@@ -109,10 +111,8 @@ public class Motorista extends AdvancedRobot {
 			if (closeToWall==false) {
 				setMaxVelocity(3);
 				closeToWall=true; 
-				System.out.println("Near wall");
 			}
 			else {
-				System.out.println("Still near wall");
 			}
 		}
 		else {
