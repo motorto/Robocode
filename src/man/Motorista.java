@@ -43,7 +43,7 @@ public class Motorista extends AdvancedRobot {
 		else
 			lowEnergy = false;
 
-		if (!lowEnergy) { // If low energy , we don't shot we just move
+		if (!lowEnergy) { // If low energy, we don't shot we just move
 			if (event.getDistance() < 20)//bot's touching
 				fire(Rules.MAX_BULLET_POWER);
 			else if(event.getDistance() < 100 ) { //bot's close
@@ -90,7 +90,7 @@ public class Motorista extends AdvancedRobot {
 		turnRadarRightRadians(Double.POSITIVE_INFINITY);
 	}
 
-	//dance
+	//victory dance
 	public void onWin(WinEvent event) {
 		setMaxVelocity(0);
 		while(true) {
