@@ -8,10 +8,12 @@ public class Motorista extends AdvancedRobot {
 		setColors(Color.pink,Color.pink,Color.white); // body / gun / radar
 		setBulletColor(Color.pink);
 		setAdjustGunForRobotTurn(true);
+		setAdjustRadarForGunTurn(true);
 
+		turnRadarRightRadians(Double.POSITIVE_INFINITY);
 		while (true) {
-			turnGunRightRadians(1);
-			//AvoidWall();
+			//scan();
+			AvoidWall();
 		}
 	}
 
@@ -19,8 +21,14 @@ public class Motorista extends AdvancedRobot {
 		int enemyEnergy = 0;
 		boolean lowEnergy = false;
 		enemyEnergy  = (int) event.getEnergy();
-
+		
+		double radarTurn = getHeading() + event.getBearing()-getRadarHeading();
+		
+		setTurnRadarRight(normalizeBearing(radarTurn));
+		
 		setTurnRight(normalizeBearing(event.getBearing() + 90 - (15 * moveDirection)));
+		setTurnGunRight(normalizeBearing(
+				(getHeading() + event.getBearing()) - getGunHeading()));
 		setAhead(200 * moveDirection ); // move in circles;
 
 		if (getEnergy() < 2.0) 
@@ -29,20 +37,19 @@ public class Motorista extends AdvancedRobot {
 			lowEnergy = false;
 
 		if (!lowEnergy) { // If low energy , we dont shot we just move
-			if (event.getDistance() < 30)
+			if (event.getDistance() < 30)//bots touching
 				fire(Rules.MAX_BULLET_POWER);
-			else if(event.getDistance() < 120 && Math.random() > .85) {
+			else if(event.getDistance() < 120 ) {
 				fire(3);
 			}
 			else 
-				fire(1);
+				fire(0.5);
 		}
 
 		// if enemyShoots we change dir with 50% chance
 		if ((enemyEnergy < (int)event.getEnergy()) && Math.random() > .50) {
 			moveDirection *= -1;
 		}
-		setTurnRight(normalizeBearing(event.getBearing() + 90 - (15 * moveDirection)));
 	}
 
 	public void onHitWall(HitWallEvent event) {
@@ -59,17 +66,24 @@ public class Motorista extends AdvancedRobot {
 		}
 		return angle;
 	}
+	
+	public void onRobotDeath(RobotDeathEvent event) {
+		ahead(20000);
+	}
 
-	/*
-	 * Em vez de um avoidWall , talvez um brake antes de bater na parede nao sei (reduzir a velocidade
-	 * Ao minimo para tirar menos dano.
-	 *  setMaxVelocity(Math.abs(getTurnRemaining()) < 40 ? preferredVelocity : 0.1);
+	
+	  // Em vez de um avoidWall , talvez um brake antes de bater na parede nao sei (reduzir a velocidade
+	  //Ao minimo para tirar menos dano.
+	 //  setMaxVelocity(Math.abs(getTurnRemaining()) < 40 ? preferredVelocity : 0.1);
 	public void AvoidWall() {
 		boolean closeToWall = false;
-		if (getX()<30 || getY()<30 || getX()>getBattleFieldWidth()-20 || getY()>getBattleFieldHeight()-20) {
+		final int distance = 24;
+		if (getX()< distance 						|| getY()<distance || 
+			getX()>getBattleFieldWidth()-distance || getY()>getBattleFieldHeight()-distance) {
 		    if (closeToWall==false) {
-		        moveDirection*=-1;
-		        closeToWall=true; System.out.println("Near wall");
+		        setMaxVelocity(0.5);
+		        closeToWall=true; 
+		        System.out.println("Near wall");
 		    }
 		    else {
 		        System.out.println("Still near wall");
@@ -77,7 +91,7 @@ public class Motorista extends AdvancedRobot {
 		}
 		else {
 		    closeToWall=false;
+		    setMaxVelocity(8);
 		}
 	}
-	*/
 }
