@@ -112,8 +112,6 @@ public class Motorista extends AdvancedRobot {
 				setMaxVelocity(3);
 				closeToWall=true; 
 			}
-			else {
-			}
 		}
 		else {
 			closeToWall=false;
