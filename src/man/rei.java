@@ -14,11 +14,9 @@ import robocode.util.Utils;
  */
 
 public class rei extends AdvancedRobot {
-    /* MERDA QUE ADICIONEI */
-	final static double BULLET_SPEED=20-3*1;//Formula for bullet speed.
+	final static double BULLET_STRENGTH = 2;
+	final static double BULLET_SPEED=20-3* BULLET_STRENGTH;//Formula for bullet speed.
     double oldEnemyHeading;
-    
-    // -------------------------------
     
 	private int moveDirection = 1; // change direction
 	private int shots = 0; // Number of shots fired
@@ -41,14 +39,11 @@ public class rei extends AdvancedRobot {
 	public void onScannedRobot(ScannedRobotEvent event) {
 		int lastEnemyEnergy = enemyEnergy;	
 		boolean lowEnergy = false;
-		// --------------------------------
         double absBearing=event.getBearingRadians()+getHeadingRadians();
         //Finding the heading and heading change.
         double enemyHeading = event.getHeadingRadians();
         double enemyHeadingChange = enemyHeading - oldEnemyHeading;
         oldEnemyHeading = enemyHeading;
-		// --------------------------------
-
 
 		//get turn required for scan -> (enemy angle - current radar heading)
 		double radarTurn = getHeading() + event.getBearing()-getRadarHeading();
@@ -59,8 +54,13 @@ public class rei extends AdvancedRobot {
 		setTurnRight(normalizeBearing(event.getBearing() + 90 - (15 * moveDirection)));
 		//move in circles
 		setAhead(200 * moveDirection );
-		// --------------------------------------
 
+		/*
+		 * Circular Targeting on robot wiki
+		 * https://robowiki.net/wiki/Circular_Targeting/Walkthrough
+		 * https://robowiki.net/wiki/Circular_Targeting
+		 */
+		
 		double deltaTime = 0;
         double predictedX = getX()+event.getDistance()*Math.sin(absBearing);
         double predictedY = getY()+event.getDistance()*Math.cos(absBearing);
@@ -69,7 +69,6 @@ public class rei extends AdvancedRobot {
             //Add the movement we think our enemy will make to our enemy's current X and Y
             predictedX += Math.sin(enemyHeading) * event.getVelocity();
             predictedY += Math.cos(enemyHeading) * event.getVelocity();
-
 
             //Find our enemy's heading changes.
             enemyHeading += enemyHeadingChange;
@@ -80,9 +79,10 @@ public class rei extends AdvancedRobot {
             predictedY=Math.max(Math.min(predictedY,getBattleFieldHeight()-18),18);
 
         }
+        
         double aim = Utils.normalAbsoluteAngle(Math.atan2(  predictedX - getX(), predictedY - getY()));
         setTurnGunRightRadians(Utils.normalRelativeAngle(aim - getGunHeadingRadians()));
-		// --------------------------------------
+        // --------------------------------------
 
 		if (getEnergy() < 1.0) 
 			lowEnergy = true;
@@ -90,17 +90,13 @@ public class rei extends AdvancedRobot {
 			lowEnergy = false;
 
 		if (!lowEnergy) { // If low energy, we don't shot we just move
-			if (event.getDistance() < 20)//bot's touching
+			if (event.getDistance() < 100)//bot's touching
 				fire(Rules.MAX_BULLET_POWER);
-			else if(event.getDistance() < 100 ) { //bot's close
-				fire(3);
-			}
 			else //bot's far away
-				fire(1);
+				fire(BULLET_STRENGTH);
 
 			shots++;
 		}
-
 
 		enemyEnergy  = (int) event.getEnergy();
 		// if enemyShoots we change direction with 33.(3)% chance
