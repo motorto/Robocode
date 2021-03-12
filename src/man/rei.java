@@ -1,9 +1,17 @@
 package man;
 import java.awt.Color;
 import java.awt.geom.Point2D;
-import java.awt.*;
 import robocode.*;
 import robocode.util.Utils;
+
+/**
+ * Motorista!!
+ * 
+ * This Robot circles the enemy and shoots using circular targeting 
+ *
+ * @author André Cerqueira
+ * @author Duarte Alves
+ */
 
 public class rei extends AdvancedRobot {
     /* MERDA QUE ADICIONEI */
