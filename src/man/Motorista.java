@@ -16,8 +16,8 @@ import robocode.util.Utils;
 public class Motorista extends AdvancedRobot {
 	final static double BULLET_STRENGTH = 2;
 	final static double BULLET_SPEED=20-3* BULLET_STRENGTH;//Formula for bullet speed.
-    double oldEnemyHeading;
-    
+	double oldEnemyHeading;
+
 	private int moveDirection = 1; // change direction
 	private int shots = 0; // Number of shots fired
 	private int enemyEnergy = 100; //inicial enemy energy
@@ -39,11 +39,10 @@ public class Motorista extends AdvancedRobot {
 	public void onScannedRobot(ScannedRobotEvent event) {
 		int lastEnemyEnergy = enemyEnergy;	
 		boolean lowEnergy = false;
-        double absBearing=event.getBearingRadians()+getHeadingRadians();
-        //Finding the heading and heading change.
-        double enemyHeading = event.getHeadingRadians();
-        double enemyHeadingChange = enemyHeading - oldEnemyHeading;
-        oldEnemyHeading = enemyHeading;
+		double absBearing=event.getBearingRadians()+getHeadingRadians();
+		double enemyHeading = event.getHeadingRadians(); //Finding the heading and heading change.
+		double enemyHeadingChange = enemyHeading - oldEnemyHeading;
+		oldEnemyHeading = enemyHeading;
 
 		//get turn required for scan -> (enemy angle - current radar heading)
 		double radarTurn = getHeading() + event.getBearing()-getRadarHeading();
@@ -60,29 +59,29 @@ public class Motorista extends AdvancedRobot {
 		 * https://robowiki.net/wiki/Circular_Targeting/Walkthrough
 		 * https://robowiki.net/wiki/Circular_Targeting
 		 */
-		
+
 		double deltaTime = 0;
-        double predictedX = getX()+event.getDistance()*Math.sin(absBearing);
-        double predictedY = getY()+event.getDistance()*Math.cos(absBearing);
-        while((++deltaTime) * BULLET_SPEED <  Point2D.Double.distance(getX(), getY(), predictedX, predictedY)){
+		double predictedX = getX()+event.getDistance()*Math.sin(absBearing);
+		double predictedY = getY()+event.getDistance()*Math.cos(absBearing);
+		while((++deltaTime) * BULLET_SPEED <  Point2D.Double.distance(getX(), getY(), predictedX, predictedY)){
 
-            //Add the movement we think our enemy will make to our enemy's current X and Y
-            predictedX += Math.sin(enemyHeading) * event.getVelocity();
-            predictedY += Math.cos(enemyHeading) * event.getVelocity();
+			//Add the movement we think our enemy will make to our enemy's current X and Y
+			predictedX += Math.sin(enemyHeading) * event.getVelocity();
+			predictedY += Math.cos(enemyHeading) * event.getVelocity();
 
-            //Find our enemy's heading changes.
-            enemyHeading += enemyHeadingChange;
+			//Find our enemy's heading changes.
+			enemyHeading += enemyHeadingChange;
 
-            //If our predicted coordinates are outside the walls, put them 18 distance units away from the walls as we know
-            //that that is the closest they can get to the wall (Bots are non-rotating 36*36 squares).
-            predictedX=Math.max(Math.min(predictedX,getBattleFieldWidth()-18),18);
-            predictedY=Math.max(Math.min(predictedY,getBattleFieldHeight()-18),18);
+			//If our predicted coordinates are outside the walls, put them 18 distance units away from the walls as we know
+			//that that is the closest they can get to the wall (Bots are non-rotating 36*36 squares).
+			predictedX=Math.max(Math.min(predictedX,getBattleFieldWidth()-18),18);
+			predictedY=Math.max(Math.min(predictedY,getBattleFieldHeight()-18),18);
 
-        }
-        
-        double aim = Utils.normalAbsoluteAngle(Math.atan2(  predictedX - getX(), predictedY - getY()));
-        setTurnGunRightRadians(Utils.normalRelativeAngle(aim - getGunHeadingRadians()));
-        // --------------------------------------
+		}
+
+		double aim = Utils.normalAbsoluteAngle(Math.atan2(  predictedX - getX(), predictedY - getY()));
+		setTurnGunRightRadians(Utils.normalRelativeAngle(aim - getGunHeadingRadians()));
+		// --------------------------------------
 
 		if (getEnergy() < 1.0) 
 			lowEnergy = true;
@@ -149,7 +148,7 @@ public class Motorista extends AdvancedRobot {
 		double Xpos = getX();
 		double Ypos = getY();
 		if (Xpos< distance 						|| Ypos<distance || 
-			Xpos>getBattleFieldWidth()-distance || Ypos>getBattleFieldHeight()-distance) {
+				Xpos>getBattleFieldWidth()-distance || Ypos>getBattleFieldHeight()-distance) {
 			if (closeToWall==false) {
 				setMaxVelocity(3);
 				closeToWall=true; 
